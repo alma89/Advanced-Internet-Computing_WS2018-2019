@@ -1,6 +1,16 @@
 TUWien
 Docker-based Service Composition Project
 
+Institution: TU Vienna
+
+Academic year: 2017/2018
+
+Subject: Advanced Internet Computing
+
+Programming language: Java
+
+Team work - group of 5 people
+
 # Starting the services
 1. Run `docker-compose up` (use `--build` to be sure to rebuild all dockerfiles again)
 2. To stop use `docker-compose down`
