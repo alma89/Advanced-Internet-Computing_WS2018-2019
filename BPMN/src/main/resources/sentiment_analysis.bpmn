@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.11.3">
+  <bpmn:process id="sentiment-analysis" name="sentiment analysis" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Sentiment Analysis started">
+      <bpmn:outgoing>SequenceFlow_01fvyza</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Task_0vog2le" name="Call twitter serivce">
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property />
+        </camunda:properties>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="url"><![CDATA[http://tweetscollector:8080/submit?keywords=${keywords}&count=${count}]]></camunda:inputParameter>
+            <camunda:inputParameter name="method">GET</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:map>
+                <camunda:entry key="Content-Type">application/json</camunda:entry>
+              </camunda:map>
+            </camunda:inputParameter>
+            <camunda:outputParameter name="response">${response}</camunda:outputParameter>
+            <camunda:outputParameter name="returnCode">${statusCode}</camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_01fvyza</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1frgmtk</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_01fvyza" sourceRef="StartEvent_1" targetRef="Task_0vog2le" />
+    <bpmn:endEvent id="EndEvent_1rxle2q" name="Sentiment Analysis finished">
+      <bpmn:incoming>SequenceFlow_05n4yja</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1frgmtk" sourceRef="Task_0vog2le" targetRef="Task_16j7ozl" />
+    <bpmn:serviceTask id="Task_16j7ozl" name="Call Analysis Service">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="url">http://sentimentanalysis:8080/getAnalysis</camunda:inputParameter>
+            <camunda:inputParameter name="method">POST</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:map>
+                <camunda:entry key="Content-Type">application/json</camunda:entry>
+              </camunda:map>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="payload">${response}</camunda:inputParameter>
+            <camunda:outputParameter name="response">${response}</camunda:outputParameter>
+            <camunda:outputParameter name="returnCode">${statusCode}</camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1frgmtk</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0pzkx97</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0pzkx97" sourceRef="Task_16j7ozl" targetRef="Task_1hj2u3p" />
+    <bpmn:serviceTask id="Task_1hj2u3p" name="Call Report Service">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="url">http://reportservice:8080/report</camunda:inputParameter>
+            <camunda:inputParameter name="method">POST</camunda:inputParameter>
+            <camunda:inputParameter name="payload">${response}</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:map>
+                <camunda:entry key="Content-Type">application/json</camunda:entry>
+              </camunda:map>
+            </camunda:inputParameter>
+            <camunda:outputParameter name="returnCode">${statusCode}</camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0pzkx97</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_05n4yja</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_05n4yja" sourceRef="Task_1hj2u3p" targetRef="EndEvent_1rxle2q" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="sentiment-analysis">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="43" y="266" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="22" y="302" width="79" height="24" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1sdys4o_di" bpmnElement="Task_0vog2le">
+        <dc:Bounds x="198" y="244" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_01fvyza_di" bpmnElement="SequenceFlow_01fvyza">
+        <di:waypoint xsi:type="dc:Point" x="79" y="284" />
+        <di:waypoint xsi:type="dc:Point" x="138" y="284" />
+        <di:waypoint xsi:type="dc:Point" x="138" y="284" />
+        <di:waypoint xsi:type="dc:Point" x="198" y="284" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="153" y="278" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_1rxle2q_di" bpmnElement="EndEvent_1rxle2q">
+        <dc:Bounds x="751.6101549053355" y="266.35025817555936" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="730" y="306" width="81" height="24" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1frgmtk_di" bpmnElement="SequenceFlow_1frgmtk">
+        <di:waypoint xsi:type="dc:Point" x="298" y="284" />
+        <di:waypoint xsi:type="dc:Point" x="346" y="284" />
+        <di:waypoint xsi:type="dc:Point" x="346" y="284" />
+        <di:waypoint xsi:type="dc:Point" x="398" y="284" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="361" y="278" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1mjej5v_di" bpmnElement="Task_16j7ozl">
+        <dc:Bounds x="398" y="244" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0pzkx97_di" bpmnElement="SequenceFlow_0pzkx97">
+        <di:waypoint xsi:type="dc:Point" x="498" y="284" />
+        <di:waypoint xsi:type="dc:Point" x="580" y="284" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="539" y="263" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0sqiyud_di" bpmnElement="Task_1hj2u3p">
+        <dc:Bounds x="580" y="245" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_05n4yja_di" bpmnElement="SequenceFlow_05n4yja">
+        <di:waypoint xsi:type="dc:Point" x="680" y="285" />
+        <di:waypoint xsi:type="dc:Point" x="752" y="284" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="716" y="263.5" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

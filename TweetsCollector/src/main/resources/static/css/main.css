@@ -1,0 +1,39 @@
+h1 {
+	color: #0000FF;
+}
+
+h2 {
+	color: #FF0000;
+}
+
+h4 {
+	font-size: 1em;
+	color: #101010;
+}
+h5 {
+	font-size: 8pt;
+	color: #707070;
+}
+
+hr {
+	border-top: 1px solid #a0a0a0;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+form {
+    text-align: center;
+    margin: 2em;
+}
+img.twitter{
+	width: 420px;
+	height: 425px;
+}
+.desc1{
+	margin-top: .5em;
+	margin-bottom: .5em;
+	text-align: right;
+}
+#keywords {
+	width: 400px;
+}
